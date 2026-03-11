@@ -1,3 +1,8 @@
 spring:
   application:
-    name: ma
+    name: movimenta-apoti
+
+crypto:
+  secret: ${CRYPTO_SECRET}
+  standard: ${CRYPTO_STANDARD}
+  algorithm: ${CRYPTO_ALGORITHM}
