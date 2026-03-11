@@ -3,6 +3,6 @@ package com.todev.ma.shared;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LoggerService {
+public abstract class BaseService {
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
 }
