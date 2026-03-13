@@ -1,4 +1,6 @@
 package com.todev.ma.shared;
 
-public record ErrorResponseData() {
+import java.util.Set;
+
+public record ErrorResponseData(String message, Set<String> details) {
 }

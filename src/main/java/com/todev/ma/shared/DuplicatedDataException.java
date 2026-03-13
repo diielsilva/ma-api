@@ -1,7 +1,7 @@
 package com.todev.ma.shared;
 
-public class UniqueDataConflictException extends RuntimeException {
-    public UniqueDataConflictException(String message) {
+public class DuplicatedDataException extends RuntimeException {
+    public DuplicatedDataException(String message) {
         super(message);
     }
 }
