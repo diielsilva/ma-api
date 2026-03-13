@@ -1,6 +1,6 @@
 package com.todev.ma.crypto;
 
-import com.todev.ma.shared.BaseService;
+import com.todev.ma.shared.Trackable;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
@@ -12,11 +12,11 @@ import static javax.crypto.Cipher.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Service
-class EncodingService extends BaseService {
+class EncodingService extends Trackable {
     private final EncodingConfiguration encodingConfiguration;
 
-    EncodingService(EncodingConfiguration environmentVariables) {
-        this.encodingConfiguration = environmentVariables;
+    EncodingService(EncodingConfiguration encodingConfiguration) {
+        this.encodingConfiguration = encodingConfiguration;
     }
 
     String encode(String text) {

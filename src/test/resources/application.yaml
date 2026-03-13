@@ -1,0 +1,16 @@
+spring:
+
+  datasource:
+    url: jdbc:tc:mysql:9.5.0:///movimenta_apoti_db?createIfNotExist=true
+    username: root
+    password: test
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+
+crypto:
+  secret: ${CRYPTO_SECRET}
+  standard: ${CRYPTO_STANDARD}
+  algorithm: ${CRYPTO_ALGORITHM}
