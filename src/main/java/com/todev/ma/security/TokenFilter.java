@@ -51,10 +51,12 @@ class TokenFilter extends BasicAuthenticationFilter {
             UsernamePasswordAuthenticationToken session = new UsernamePasswordAuthenticationToken(email, null, user.getAuthorities());
 
             SecurityContextHolder.getContext().setAuthentication(session);
+
+            chain.doFilter(request, response);
         } catch (Exception exception) {
             log.error(exception.getMessage());
-        } finally {
-            chain.doFilter(request, response);
+
+            throw new InvalidTokenException();
         }
     }
 }

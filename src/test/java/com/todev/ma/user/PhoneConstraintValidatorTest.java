@@ -3,8 +3,7 @@ package com.todev.ma.user;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PhoneConstraintValidatorTest {
     private PhoneConstraintValidator phoneValidator;
@@ -17,9 +16,9 @@ class PhoneConstraintValidatorTest {
     @Test
     void isValid_MustReturnTrue_WhenPhoneValuesAreValid() {
         assertAll(() -> {
-            assertFalse(phoneValidator.isValid("31983505752", null));
-            assertFalse(phoneValidator.isValid("63992243555", null));
-            assertFalse(phoneValidator.isValid("79994201305", null));
+            assertTrue(phoneValidator.isValid("31983505752", null));
+            assertTrue(phoneValidator.isValid("63992243555", null));
+            assertTrue(phoneValidator.isValid("79994201305", null));
         });
     }
 

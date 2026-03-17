@@ -1,7 +1,7 @@
 package com.todev.ma.shared;
 
-public class DuplicatedDataException extends RuntimeException {
-    public DuplicatedDataException(String message) {
+public abstract class DuplicatedDataException extends RuntimeException {
+    protected DuplicatedDataException(String message) {
         super(message);
     }
 }
