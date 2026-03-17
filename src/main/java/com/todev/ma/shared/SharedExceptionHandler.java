@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 class SharedExceptionHandler {
@@ -32,5 +31,11 @@ class SharedExceptionHandler {
         }
 
         return new ErrorResponseData(message, details);
+    }
+
+    @ExceptionHandler(value = SecurityException.class)
+    @ResponseStatus(value = UNAUTHORIZED)
+    ErrorResponseData handle(SecurityException exception) {
+        return new ErrorResponseData(exception.getMessage(), Set.of());
     }
 }

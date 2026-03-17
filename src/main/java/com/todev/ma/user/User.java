@@ -3,12 +3,18 @@ package com.todev.ma.user;
 import jakarta.persistence.*;
 import com.todev.ma.crypto.SensitiveDataConverter;
 import com.todev.ma.shared.Model;
+import org.jspecify.annotations.NonNull;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
-class User extends Model {
+public class User extends Model implements UserDetails {
     @Column(nullable = false)
     private String name;
 
@@ -41,7 +47,7 @@ class User extends Model {
     @Column
     private String disabilities;
 
-    protected User() {
+    public User() {
     }
 
     public User(
@@ -102,12 +108,6 @@ class User extends Model {
         this.email = email;
     }
 
-
-    public String getPassword() {
-        return password;
-    }
-
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -158,5 +158,20 @@ class User extends Model {
 
     public void setDisabilities(String disabilities) {
         this.disabilities = disabilities;
+    }
+
+    @Override
+    public @NonNull Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(getRole().name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public @NonNull String getUsername() {
+        return getEmail();
     }
 }

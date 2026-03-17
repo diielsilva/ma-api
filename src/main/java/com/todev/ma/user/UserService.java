@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-class UserService {
+class UserService implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -43,6 +43,11 @@ class UserService {
         );
 
         userRepository.save(user);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
     }
 
     private boolean isEmailRegistered(String email) {
