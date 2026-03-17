@@ -15,12 +15,12 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import java.io.IOException;
 
-class AuthorizationFilter extends BasicAuthenticationFilter {
-    private static final Logger log = LoggerFactory.getLogger(AuthorizationFilter.class);
+class TokenFilter extends BasicAuthenticationFilter {
+    private static final Logger log = LoggerFactory.getLogger(TokenFilter.class);
     private final UserDetailsRepository userDetailsRepository;
     private final TokenService tokenService;
 
-    AuthorizationFilter(
+    TokenFilter(
             AuthenticationManager authenticationManager,
             UserDetailsRepository userDetailsRepository,
             TokenService tokenService
