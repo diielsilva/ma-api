@@ -1,5 +1,6 @@
 package com.todev.ma.user;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,45 @@ class UserService implements IUserService {
                 data.birthDate(),
                 data.disabilities()
         );
+
+        userRepository.save(user);
+    }
+
+    @Transactional
+    void update(Authentication session, UpdateUserRequestData data) {
+        User user = findByEmail(session.getName());
+
+        boolean wasEmailChanged = !user.getEmail().equals(data.email());
+
+        if (wasEmailChanged && isEmailRegistered(data.email())) {
+            throw new DuplicatedEmailException();
+        }
+
+        boolean wasCpfChanged = !user.getCpf().equals(data.cpf());
+
+        if (wasCpfChanged && isCpfRegistered(data.cpf())) {
+            throw new DuplicatedCpfException();
+        }
+
+        boolean wasPhoneChanged = !user.getPhone().equals(data.phone());
+
+        if (wasPhoneChanged && isPhoneRegistered(data.phone())) {
+            throw new DuplicatedPhoneException();
+        }
+
+        if (data.password() != null) {
+            String encodedPassword = passwordEncoder.encode(data.password());
+
+            user.setPassword(encodedPassword);
+        }
+
+        user.setName(data.name());
+        user.setEmail(data.email());
+        user.setCpf(data.cpf());
+        user.setPhone(data.phone());
+        user.setGender(Gender.valueOf(data.gender().toUpperCase()));
+        user.setBirthDate(data.birthDate());
+        user.setDisabilities(data.disabilities());
 
         userRepository.save(user);
     }
