@@ -7,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -31,8 +30,8 @@ class UserDetailsRepositoryTest {
 
     @Test
     void loadUserByUsername_MustNotReturnAnUser_WhenUsernameWasNotFound() {
-        when(userService.findByEmail(anyString())).thenThrow(ModelNotFoundException.class);
+        when(userService.findByEmail(anyString())).thenThrow(InvalidUserCredentialsException.class);
 
-        assertThrows(UsernameNotFoundException.class, () -> userDetailsRepository.loadUserByUsername(""));
+        assertThrows(InvalidUserCredentialsException.class, () -> userDetailsRepository.loadUserByUsername(""));
     }
 }
