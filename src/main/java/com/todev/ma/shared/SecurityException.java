@@ -1,7 +1,7 @@
 package com.todev.ma.shared;
 
-public class SecurityException extends RuntimeException {
-    public SecurityException(String message) {
+public abstract class SecurityException extends RuntimeException {
+    protected SecurityException(String message) {
         super(message);
     }
 }

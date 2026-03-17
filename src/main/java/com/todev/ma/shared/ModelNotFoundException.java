@@ -1,7 +1,7 @@
 package com.todev.ma.shared;
 
-public class ModelNotFoundException extends RuntimeException {
-    public ModelNotFoundException(String message) {
+public abstract class ModelNotFoundException extends RuntimeException {
+    protected ModelNotFoundException(String message) {
         super(message);
     }
 }
