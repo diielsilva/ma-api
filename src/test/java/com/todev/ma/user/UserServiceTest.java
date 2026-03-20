@@ -273,4 +273,22 @@ class UserServiceTest {
 
         assertThrows(DuplicatedPhoneException.class, () -> userService.update(session, data));
     }
+
+    @Test
+    void getSessionOwner_MustReturnAnUser_WhenSessionOwnerWasFound() {
+        Authentication session = new UsernamePasswordAuthenticationToken("bento@queirozgalvao.com", null);
+
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
+
+        assertDoesNotThrow(() -> userService.getSessionOwner(session));
+    }
+
+    @Test
+    void getSessionOwner_MustNotReturnAnUser_WhenSessionOwnerWasNotFound() {
+        Authentication session = new UsernamePasswordAuthenticationToken("bento@queirozgalvao.com", null);
+
+        when(userRepository.findByEmail(anyString())).thenReturn(empty());
+
+        assertThrows(UserNotFoundException.class, () -> userService.getSessionOwner(session));
+    }
 }
