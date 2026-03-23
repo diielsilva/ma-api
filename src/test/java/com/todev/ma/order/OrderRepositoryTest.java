@@ -1,7 +1,7 @@
 package com.todev.ma.order;
 
-import com.todev.ma.user.UserRepositoryWrapper;
 import com.todev.ma.user.User;
+import com.todev.ma.user.UserRepositoryWrapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,22 +13,29 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.todev.ma.order.OrderStatus.PENDING;
+import static com.todev.ma.order.PaymentMethod.PIX;
 import static com.todev.ma.user.Gender.MALE;
 import static com.todev.ma.user.Role.USER;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Import(value = {TestcontainersConfiguration.class})
-class EnrollmentOrderRepositoryTest {
+class OrderRepositoryTest {
     @Autowired
-    private EnrollmentOrderRepository enrollmentOrderRepository;
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private PixDetailRepository pixDetailRepository;
 
     @Autowired
     private UserRepositoryWrapper userRepository;
 
     @AfterEach
     void tearDown() {
-        enrollmentOrderRepository.deleteAll();
+        pixDetailRepository.deleteAll();
+        orderRepository.deleteAll();
         userRepository.deleteAll();
     }
 
@@ -47,17 +54,17 @@ class EnrollmentOrderRepositoryTest {
 
         userRepository.save(user);
 
-        EnrollmentOrder order = new EnrollmentOrder(
+        Order order = new Order(
                 user,
                 25,
                 LocalDateTime.now().plusDays(1L),
-                PaymentMethod.PIX,
-                OrderStatus.WAITING_PAYMENT
+                PIX,
+                PENDING
         );
 
-        enrollmentOrderRepository.save(order);
+        orderRepository.save(order);
 
-        List<EnrollmentOrder> orders = enrollmentOrderRepository.findByUserId(user.getId());
+        List<Order> orders = orderRepository.findByUserId(user.getId());
 
         assertEquals(1, orders.size());
     }
@@ -77,7 +84,7 @@ class EnrollmentOrderRepositoryTest {
 
         userRepository.save(user);
 
-        List<EnrollmentOrder> orders = enrollmentOrderRepository.findByUserId(user.getId());
+        List<Order> orders = orderRepository.findByUserId(user.getId());
 
         assertTrue(orders.isEmpty());
     }

@@ -2,12 +2,11 @@ package com.todev.ma.order;
 
 import java.time.LocalDateTime;
 
-record DisplayOrderResponseData(
+record CreateOrderResponseData(
         Integer value,
         LocalDateTime dueDate,
         PaymentMethod paymentMethod,
         OrderStatus status,
-        LocalDateTime paidAt,
         LocalDateTime createdAt
 ) {
 }

@@ -1,4 +1,7 @@
 package com.todev.ma.order;
 
-public enum PaymentStatus {
+public enum OrderStatus {
+    CANCELLED,
+    PENDING,
+    CONFIRMED
 }

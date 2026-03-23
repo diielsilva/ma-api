@@ -1,4 +1,6 @@
 package com.todev.ma.order;
 
-public interface PixDetailRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+interface PixDetailRepository extends JpaRepository<PixDetail, Long> {
 }

@@ -1,7 +1,11 @@
 package com.todev.ma.order;
 
-public class MissingPixDetailException extends RuntimeException {
-  public MissingPixDetailException(String message) {
-    super(message);
-  }
+import com.todev.ma.shared.InternalApplicationException;
+
+class MissingPixDetailException extends InternalApplicationException {
+    private static final String EXCEPTION_MESSAGE = "Os detalhes do pedido de pagamento estão ausentes";
+
+    MissingPixDetailException() {
+        super(EXCEPTION_MESSAGE);
+    }
 }

@@ -7,8 +7,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "enrollment_orders")
-public class EnrollmentOrder extends Model {
+@Table(name = "orders")
+public class Order extends Model {
     @ManyToOne
     private User user;
 
@@ -28,10 +28,10 @@ public class EnrollmentOrder extends Model {
 
     private LocalDateTime paidAt;
 
-    public EnrollmentOrder() {
+    public Order() {
     }
 
-    public EnrollmentOrder(
+    public Order(
             User user, Integer value,
             LocalDateTime dueDate,
             PaymentMethod paymentMethod,
@@ -44,7 +44,7 @@ public class EnrollmentOrder extends Model {
         this.status = status;
     }
 
-    public EnrollmentOrder(
+    public Order(
             User user,
             Integer value,
             LocalDateTime dueDate,
