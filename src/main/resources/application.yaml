@@ -24,3 +24,9 @@ security:
   jwt:
     secret: ${JWT_SECRET}
     expiration: ${JWT_EXPIRATION}
+
+payment:
+  gateway:
+    url: ${GATEWAY_URL}
+    token: ${GATEWAY_TOKEN}
+    webhook: ${GATEWAY_WEBHOOK}

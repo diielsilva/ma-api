@@ -1,0 +1,1 @@
+RENAME TABLE enrollment_orders TO orders;

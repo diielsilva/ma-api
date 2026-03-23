@@ -1,5 +1,6 @@
 package com.todev.ma.user;
 
+import com.todev.ma.shared.ModelNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -86,8 +87,13 @@ class UserService implements IUserService {
     }
 
     @Override
-    public User findByEmail(String email) {
+    public User findByEmail(String email) throws ModelNotFoundException {
         return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    public User getSessionOwner(Authentication session) throws ModelNotFoundException {
+        return findByEmail(session.getName());
     }
 
     private boolean isEmailRegistered(String email) {
