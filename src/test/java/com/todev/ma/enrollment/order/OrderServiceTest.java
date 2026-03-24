@@ -173,4 +173,11 @@ class OrderServiceTest {
 
         assertThrows(OrderNotFoundException.class, () -> orderService.findById(1L));
     }
+
+    @Test
+    void confirm_MustConfirmAnOrder_WhenNoExceptionIsThrown() {
+        Order order = new Order(null, 25, LocalDateTime.now().minusDays(1), CASH, PENDING);
+
+        assertDoesNotThrow(() -> orderService.confirm(order));
+    }
 }

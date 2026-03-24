@@ -87,6 +87,13 @@ class OrderService implements IOrderService {
         return orderRepository.findById(id).orElseThrow(OrderNotFoundException::new);
     }
 
+    @Override
+    public void confirm(Order order) {
+        order.setStatus(CONFIRMED);
+
+        orderRepository.save(order);
+    }
+
     @Transactional
     void confirm(Authentication session, Long id) {
         User admin = userService.getSessionOwner(session);
