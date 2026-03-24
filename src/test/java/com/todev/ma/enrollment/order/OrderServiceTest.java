@@ -15,14 +15,15 @@ import org.springframework.security.core.Authentication;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.todev.ma.enrollment.order.OrderStatus.*;
 import static com.todev.ma.enrollment.order.PaymentMethod.CASH;
 import static com.todev.ma.user.Gender.MALE;
 import static com.todev.ma.user.Role.USER;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.doNothing;
 import static org.mockito.BDDMockito.when;
 
@@ -147,5 +148,29 @@ class OrderServiceTest {
         when(orderRepository.findByUserId(any())).thenReturn(List.of(order));
 
         assertThrows(OrderAlreadyConfirmedException.class, () -> orderService.create(session, data));
+    }
+
+    @Test
+    void findById_MustReturnAnOrder_WhenOrderIdWasFound() {
+        Order order = new Order(null, 25, LocalDateTime.now().minusDays(1), CASH, CONFIRMED);
+
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
+
+        assertDoesNotThrow(() -> orderService.findById(1L));
+    }
+
+    @Test
+    void findById_MustNotReturnAnOrder_WhenIdIsNullOrSmallerThanZero() {
+        assertAll(() -> {
+            assertThrows(OrderNotFoundException.class, () -> orderService.findById(null));
+            assertThrows(OrderNotFoundException.class, () -> orderService.findById(-1L));
+        });
+    }
+
+    @Test
+    void findById_MustNotReturnAnOrder_WhenIdWasNotFound() {
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(OrderNotFoundException.class, () -> orderService.findById(1L));
     }
 }

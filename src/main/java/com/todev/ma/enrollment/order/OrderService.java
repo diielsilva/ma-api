@@ -3,6 +3,7 @@ package com.todev.ma.enrollment.order;
 import com.todev.ma.enrollment.order.pix.IPixDetailService;
 import com.todev.ma.enrollment.payment.CreatePaymentOrderResponseData;
 import com.todev.ma.enrollment.payment.IPaymentOrderService;
+import com.todev.ma.shared.ModelNotFoundException;
 import com.todev.ma.user.IUserService;
 import com.todev.ma.user.User;
 import org.springframework.security.core.Authentication;
@@ -17,7 +18,7 @@ import static com.todev.ma.enrollment.order.OrderStatus.PENDING;
 import static com.todev.ma.enrollment.order.PaymentMethod.PIX;
 
 @Service
-class OrderService {
+class OrderService implements IOrderService {
     private final OrderRepository orderRepository;
     private final IUserService userService;
     private final IPaymentOrderService paymentOrderService;
@@ -75,6 +76,15 @@ class OrderService {
                 order.getStatus(),
                 order.getCreatedAt()
         );
+    }
+
+    @Override
+    public Order findById(Long id) throws ModelNotFoundException {
+        if (id == null || id <= 0) {
+            throw new OrderNotFoundException();
+        }
+
+        return orderRepository.findById(id).orElseThrow(OrderNotFoundException::new);
     }
 
     @Transactional
