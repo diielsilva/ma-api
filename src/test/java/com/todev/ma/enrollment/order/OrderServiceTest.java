@@ -1,5 +1,6 @@
 package com.todev.ma.enrollment.order;
 
+import com.todev.ma.enrollment.order.pix.IPixDetailService;
 import com.todev.ma.enrollment.payment.IPaymentOrderService;
 import com.todev.ma.user.IUserService;
 import com.todev.ma.user.User;
@@ -40,7 +41,7 @@ class OrderServiceTest {
     private IPaymentOrderService paymentOrderService;
 
     @Mock
-    private PixDetailService pixDetailService;
+    private IPixDetailService pixDetailService;
 
     @Test
     void create_MustCreateAnOrderAndAPixDetail_WhenUserHasNoOrders() {

@@ -1,5 +1,6 @@
 package com.todev.ma.enrollment.order;
 
+import com.todev.ma.enrollment.order.pix.IPixDetailService;
 import com.todev.ma.enrollment.payment.CreatePaymentOrderResponseData;
 import com.todev.ma.enrollment.payment.IPaymentOrderService;
 import com.todev.ma.user.IUserService;
@@ -20,13 +21,13 @@ class OrderService {
     private final OrderRepository orderRepository;
     private final IUserService userService;
     private final IPaymentOrderService paymentOrderService;
-    private final PixDetailService pixDetailService;
+    private final IPixDetailService pixDetailService;
 
     OrderService(
             OrderRepository orderRepository,
             IUserService userService,
             IPaymentOrderService paymentOrderService,
-            PixDetailService pixDetailService
+            IPixDetailService pixDetailService
     ) {
         this.orderRepository = orderRepository;
         this.userService = userService;
@@ -74,6 +75,11 @@ class OrderService {
                 order.getStatus(),
                 order.getCreatedAt()
         );
+    }
+
+    @Transactional
+    void confirm(Authentication session, Long id) {
+        User admin = userService.getSessionOwner(session);
     }
 
 }

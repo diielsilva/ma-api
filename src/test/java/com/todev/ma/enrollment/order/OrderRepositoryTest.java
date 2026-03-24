@@ -1,8 +1,5 @@
 package com.todev.ma.enrollment.order;
 
-import com.todev.ma.enrollment.order.Order;
-import com.todev.ma.enrollment.order.OrderRepository;
-import com.todev.ma.enrollment.order.PixDetailRepository;
 import com.todev.ma.user.User;
 import com.todev.ma.user.UserRepositoryWrapper;
 import org.junit.jupiter.api.AfterEach;
@@ -30,14 +27,10 @@ class OrderRepositoryTest {
     private OrderRepository orderRepository;
 
     @Autowired
-    private PixDetailRepository pixDetailRepository;
-
-    @Autowired
     private UserRepositoryWrapper userRepository;
 
     @AfterEach
     void tearDown() {
-        pixDetailRepository.deleteAll();
         orderRepository.deleteAll();
         userRepository.deleteAll();
     }
