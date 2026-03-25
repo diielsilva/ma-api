@@ -1,6 +1,6 @@
 package com.todev.ma.enrollment.confirmation;
 
-import com.todev.ma.enrollment.order.Order;
+import com.todev.ma.enrollment.Enrollment;
 import com.todev.ma.shared.Model;
 import com.todev.ma.user.User;
 import jakarta.persistence.Entity;
@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 @Table(name = "manual_confirmations")
 public class ManualConfirmation extends Model {
     @OneToOne
-    private Order order;
+    private Enrollment enrollment;
 
     @ManyToOne
     private User confirmedBy;
@@ -20,17 +20,17 @@ public class ManualConfirmation extends Model {
     public ManualConfirmation() {
     }
 
-    public ManualConfirmation(Order order, User confirmedBy) {
-        this.order = order;
+    public ManualConfirmation(Enrollment enrollment, User confirmedBy) {
+        this.enrollment = enrollment;
         this.confirmedBy = confirmedBy;
     }
 
-    public Order getOrder() {
-        return order;
+    public Enrollment getEnrollment() {
+        return enrollment;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setEnrollment(Enrollment enrollment) {
+        this.enrollment = enrollment;
     }
 
     public User getConfirmedBy() {

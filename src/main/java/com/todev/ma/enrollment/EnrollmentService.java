@@ -1,8 +1,8 @@
 package com.todev.ma.enrollment;
 
+import com.todev.ma.enrollment.confirmation.IManualConfirmationService;
 import com.todev.ma.enrollment.order.IOrderService;
 import com.todev.ma.enrollment.order.Order;
-import com.todev.ma.enrollment.confirmation.IManualConfirmationService;
 import com.todev.ma.user.IUserService;
 import com.todev.ma.user.User;
 import org.springframework.security.core.Authentication;
@@ -52,12 +52,12 @@ class EnrollmentService {
             throw new ManuallyConfirmingAutomatedEnrollmentException();
         }
 
-        orderService.confirm(order);
-
-        confirmationService.create(admin, order);
-
         Enrollment enrollment = new Enrollment(order, MANUAL);
 
         enrollmentRepository.save(enrollment);
+
+        orderService.confirm(order);
+
+        confirmationService.create(admin, enrollment);
     }
 }

@@ -1,21 +1,21 @@
 package com.todev.ma.enrollment.confirmation;
 
-import com.todev.ma.enrollment.order.Order;
+import com.todev.ma.enrollment.Enrollment;
 import com.todev.ma.user.User;
 import org.springframework.stereotype.Service;
 
 @Service
 class ManualConfirmationService implements IManualConfirmationService {
-    private final ManualConfirmationRepository manualConfirmationRepository;
+    private final ManualConfirmationRepository confirmationRepository;
 
-    ManualConfirmationService(ManualConfirmationRepository manualConfirmationRepository) {
-        this.manualConfirmationRepository = manualConfirmationRepository;
+    ManualConfirmationService(ManualConfirmationRepository confirmationRepository) {
+        this.confirmationRepository = confirmationRepository;
     }
 
     @Override
-    public void create(User admin, Order order) {
-        ManualConfirmation confirmation = new ManualConfirmation(order, admin);
+    public void create(User admin, Enrollment enrollment) {
+        ManualConfirmation confirmation = new ManualConfirmation(enrollment, admin);
 
-        manualConfirmationRepository.save(confirmation);
+        confirmationRepository.save(confirmation);
     }
 }
