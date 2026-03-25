@@ -1,4 +1,4 @@
-package com.todev.ma.enrollment.order.confirmation;
+package com.todev.ma.enrollment.confirmation;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

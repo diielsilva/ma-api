@@ -2,7 +2,7 @@ package com.todev.ma.enrollment;
 
 import com.todev.ma.enrollment.order.IOrderService;
 import com.todev.ma.enrollment.order.Order;
-import com.todev.ma.enrollment.order.confirmation.IManualConfirmationService;
+import com.todev.ma.enrollment.confirmation.IManualConfirmationService;
 import com.todev.ma.user.IUserService;
 import com.todev.ma.user.User;
 import org.junit.jupiter.api.Test;
