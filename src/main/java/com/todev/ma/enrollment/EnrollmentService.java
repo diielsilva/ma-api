@@ -2,7 +2,6 @@ package com.todev.ma.enrollment;
 
 import com.todev.ma.enrollment.order.IOrderService;
 import com.todev.ma.enrollment.order.Order;
-import com.todev.ma.enrollment.order.OrderStatus;
 import com.todev.ma.enrollment.order.confirmation.IManualConfirmationService;
 import com.todev.ma.user.IUserService;
 import com.todev.ma.user.User;
@@ -13,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 import static com.todev.ma.enrollment.EnrollmentType.MANUAL;
+import static com.todev.ma.enrollment.order.OrderStatus.PENDING;
+import static com.todev.ma.enrollment.order.PaymentMethod.CASH;
 
 @Service
 class EnrollmentService {
@@ -39,12 +40,16 @@ class EnrollmentService {
         Order order = orderService.findById(orderId);
         LocalDateTime now = LocalDateTime.now();
 
-        if (order.getStatus() != OrderStatus.PENDING) {
+        if (order.getStatus() != PENDING) {
             throw new InvalidOrderStatusException();
         }
 
         if (order.getDueDate().isBefore(now)) {
             throw new OrderExpiredException();
+        }
+
+        if (!order.getPaymentMethod().equals(CASH)) {
+            throw new ManuallyConfirmingAutomatedEnrollmentException();
         }
 
         orderService.confirm(order);

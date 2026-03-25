@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import static com.todev.ma.enrollment.order.OrderStatus.CANCELLED;
 import static com.todev.ma.enrollment.order.OrderStatus.PENDING;
 import static com.todev.ma.enrollment.order.PaymentMethod.CASH;
+import static com.todev.ma.enrollment.order.PaymentMethod.PIX;
 import static com.todev.ma.user.Gender.MALE;
 import static com.todev.ma.user.Role.ADMIN;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -114,5 +115,29 @@ class EnrollmentServiceTest {
         when(orderService.findById(anyLong())).thenReturn(order);
 
         assertThrows(OrderExpiredException.class, () -> enrollmentService.create(session, 2L));
+    }
+
+    @Test
+    void create_MustNotCreateAnEnrollment_WhenTryingToConfirmAnAutomatedEnrollment() {
+        User admin = new User(
+                "Martin Ryan Pedro Aparício",
+                "martin-aparicio96@sp.senac.com.br",
+                "hQbzZZHANd",
+                "54463972906",
+                "27991911428",
+                MALE,
+                ADMIN,
+                LocalDate.of(1972, 8, 2)
+        );
+
+        Order order = new Order(admin, 25, LocalDateTime.now().plusDays(1), PIX, PENDING);
+
+        Authentication session = new UsernamePasswordAuthenticationToken(admin.getEmail(), admin.getPassword());
+
+        when(userService.getSessionOwner(any(Authentication.class))).thenReturn(admin);
+
+        when(orderService.findById(anyLong())).thenReturn(order);
+
+        assertThrows(ManuallyConfirmingAutomatedEnrollmentException.class, () -> enrollmentService.create(session, 2L));
     }
 }
