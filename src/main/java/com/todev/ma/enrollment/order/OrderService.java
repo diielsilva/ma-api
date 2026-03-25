@@ -93,10 +93,4 @@ class OrderService implements IOrderService {
 
         orderRepository.save(order);
     }
-
-    @Transactional
-    void confirm(Authentication session, Long id) {
-        User admin = userService.getSessionOwner(session);
-    }
-
 }
