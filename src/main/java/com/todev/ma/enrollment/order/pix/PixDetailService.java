@@ -1,7 +1,7 @@
 package com.todev.ma.enrollment.order.pix;
 
 import com.todev.ma.enrollment.order.Order;
-import com.todev.ma.enrollment.payment.CreatePaymentOrderResponseData;
+import com.todev.ma.enrollment.order.payment.CreatePaymentOrderResponseData;
 import org.springframework.stereotype.Service;
 
 @Service

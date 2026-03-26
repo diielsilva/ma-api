@@ -1,4 +1,4 @@
-package com.todev.ma.enrollment.payment;
+package com.todev.ma.enrollment.order.payment;
 
 import com.todev.ma.enrollment.order.Order;
 import com.todev.ma.shared.InternalApplicationException;

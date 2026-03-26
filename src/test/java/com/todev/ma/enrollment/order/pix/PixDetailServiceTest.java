@@ -1,10 +1,10 @@
 package com.todev.ma.enrollment.order.pix;
 
 import com.todev.ma.enrollment.order.Order;
-import com.todev.ma.enrollment.payment.CreatePaymentOrderResponseData;
-import com.todev.ma.enrollment.payment.PaymentCustomer;
-import com.todev.ma.enrollment.payment.QrCodeDetailsResponseData;
-import com.todev.ma.enrollment.payment.QrCodeResponseData;
+import com.todev.ma.enrollment.order.payment.CreatePaymentOrderResponseData;
+import com.todev.ma.enrollment.order.payment.PaymentCustomer;
+import com.todev.ma.enrollment.order.payment.QrCodeDetailsResponseData;
+import com.todev.ma.enrollment.order.payment.QrCodeResponseData;
 import com.todev.ma.user.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

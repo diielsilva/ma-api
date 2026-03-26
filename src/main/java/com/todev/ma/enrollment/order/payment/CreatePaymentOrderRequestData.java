@@ -1,4 +1,4 @@
-package com.todev.ma.enrollment.payment;
+package com.todev.ma.enrollment.order.payment;
 
 import java.util.List;
 

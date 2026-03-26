@@ -1,4 +1,4 @@
-package com.todev.ma.enrollment.payment;
+package com.todev.ma.enrollment.order.payment;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
