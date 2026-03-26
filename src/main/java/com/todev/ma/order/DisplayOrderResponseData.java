@@ -2,7 +2,8 @@ package com.todev.ma.order;
 
 import java.time.LocalDateTime;
 
-record CreateOrderResponseData(
+record DisplayOrderResponseData(
+        Long id,
         Integer value,
         LocalDateTime dueDate,
         PaymentMethod paymentMethod,

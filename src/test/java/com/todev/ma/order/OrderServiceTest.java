@@ -180,4 +180,30 @@ class OrderServiceTest {
 
         assertDoesNotThrow(() -> orderService.confirm(order));
     }
+
+    @Test
+    void findAll_MustReturnAnOrdersList_WhenUserHasRegisteredOrders() {
+        User user = new User(
+                "Martin Ryan Pedro Aparício",
+                "martin-aparicio96@sp.senac.com.br",
+                "hQbzZZHANd",
+                "54463972906",
+                "27991911428",
+                MALE,
+                USER,
+                LocalDate.of(1972, 8, 2)
+        );
+
+        Authentication session = new UsernamePasswordAuthenticationToken(user.getEmail(), null, null);
+
+        Order order = new Order(user, 25, LocalDateTime.now().minusDays(1), CASH, CONFIRMED);
+
+        when(userService.getSessionOwner(any(Authentication.class))).thenReturn(user);
+
+        when(orderRepository.findByUserId(any())).thenReturn(List.of(order));
+
+        List<DisplayOrderResponseData> data = orderService.findAll(session);
+
+        assertFalse(data.isEmpty());
+    }
 }

@@ -1,8 +1,8 @@
 package com.todev.ma.order;
 
-import com.todev.ma.order.pix.IPixDetailService;
 import com.todev.ma.order.payment.CreatePaymentOrderResponseData;
 import com.todev.ma.order.payment.IPaymentOrderService;
+import com.todev.ma.order.pix.IPixDetailService;
 import com.todev.ma.shared.ModelNotFoundException;
 import com.todev.ma.user.IUserService;
 import com.todev.ma.user.User;
@@ -37,7 +37,7 @@ class OrderService implements IOrderService {
     }
 
     @Transactional
-    CreateOrderResponseData create(Authentication session, CreateOrderRequestData data) {
+    void create(Authentication session, CreateOrderRequestData data) {
         User user = userService.getSessionOwner(session);
         List<Order> orders = orderRepository.findByUserId(user.getId());
 
@@ -68,14 +68,21 @@ class OrderService implements IOrderService {
 
             pixDetailService.create(order, paymentOrder);
         }
+    }
 
-        return new CreateOrderResponseData(
-                order.getValue(),
-                order.getDueDate(),
-                order.getPaymentMethod(),
-                order.getStatus(),
-                order.getCreatedAt()
-        );
+    List<DisplayOrderResponseData> findAll(Authentication session) {
+        User user = userService.getSessionOwner(session);
+        List<Order> orders = orderRepository.findByUserId(user.getId());
+
+        return orders.stream().map(order ->
+                new DisplayOrderResponseData(
+                        order.getId(),
+                        order.getValue(),
+                        order.getDueDate(),
+                        order.getPaymentMethod(),
+                        order.getStatus(),
+                        order.getCreatedAt()
+                )).toList();
     }
 
     @Override

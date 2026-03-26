@@ -26,13 +26,12 @@ public class Order extends Model {
     @Enumerated(value = EnumType.STRING)
     private OrderStatus status;
 
-    private LocalDateTime paidAt;
-
     public Order() {
     }
 
     public Order(
-            User user, Integer value,
+            User user,
+            Integer value,
             LocalDateTime dueDate,
             PaymentMethod paymentMethod,
             OrderStatus status
@@ -42,22 +41,6 @@ public class Order extends Model {
         this.dueDate = dueDate;
         this.paymentMethod = paymentMethod;
         this.status = status;
-    }
-
-    public Order(
-            User user,
-            Integer value,
-            LocalDateTime dueDate,
-            PaymentMethod paymentMethod,
-            OrderStatus status,
-            LocalDateTime paidAt
-    ) {
-        this.user = user;
-        this.value = value;
-        this.dueDate = dueDate;
-        this.paymentMethod = paymentMethod;
-        this.status = status;
-        this.paidAt = paidAt;
     }
 
     public User getUser() {
@@ -100,11 +83,4 @@ public class Order extends Model {
         this.status = status;
     }
 
-    public LocalDateTime getPaidAt() {
-        return paidAt;
-    }
-
-    public void setPaidAt(LocalDateTime paidAt) {
-        this.paidAt = paidAt;
-    }
 }
