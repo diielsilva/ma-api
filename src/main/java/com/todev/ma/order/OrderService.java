@@ -37,7 +37,7 @@ class OrderService implements IOrderService {
     }
 
     @Transactional
-    CreateOrderResponseData create(Authentication session, CreateOrderRequestData data) {
+    void create(Authentication session, CreateOrderRequestData data) {
         User user = userService.getSessionOwner(session);
         List<Order> orders = orderRepository.findByUserId(user.getId());
 
@@ -68,14 +68,6 @@ class OrderService implements IOrderService {
 
             pixDetailService.create(order, paymentOrder);
         }
-
-        return new CreateOrderResponseData(
-                order.getValue(),
-                order.getDueDate(),
-                order.getPaymentMethod(),
-                order.getStatus(),
-                order.getCreatedAt()
-        );
     }
 
     List<DisplayOrderResponseData> findAll(Authentication session) {
