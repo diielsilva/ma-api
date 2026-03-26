@@ -1,6 +1,6 @@
 package com.todev.ma.enrollment;
 
-import com.todev.ma.enrollment.order.Order;
+import com.todev.ma.order.Order;
 import com.todev.ma.shared.Model;
 import jakarta.persistence.*;
 

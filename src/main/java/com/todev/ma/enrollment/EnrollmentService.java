@@ -1,8 +1,8 @@
 package com.todev.ma.enrollment;
 
-import com.todev.ma.enrollment.order.IOrderService;
-import com.todev.ma.enrollment.order.Order;
-import com.todev.ma.enrollment.order.confirmation.IManualConfirmationService;
+import com.todev.ma.enrollment.confirmation.IManualConfirmationService;
+import com.todev.ma.order.IOrderService;
+import com.todev.ma.order.Order;
 import com.todev.ma.user.IUserService;
 import com.todev.ma.user.User;
 import org.springframework.security.core.Authentication;
@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 import static com.todev.ma.enrollment.EnrollmentType.MANUAL;
-import static com.todev.ma.enrollment.order.OrderStatus.PENDING;
-import static com.todev.ma.enrollment.order.PaymentMethod.CASH;
+import static com.todev.ma.order.OrderStatus.PENDING;
+import static com.todev.ma.order.PaymentMethod.CASH;
 
 @Service
 class EnrollmentService {
@@ -52,12 +52,12 @@ class EnrollmentService {
             throw new ManuallyConfirmingAutomatedEnrollmentException();
         }
 
-        orderService.confirm(order);
-
-        confirmationService.create(admin, order);
-
         Enrollment enrollment = new Enrollment(order, MANUAL);
 
         enrollmentRepository.save(enrollment);
+
+        orderService.confirm(order);
+
+        confirmationService.create(admin, enrollment);
     }
 }
