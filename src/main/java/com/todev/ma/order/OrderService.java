@@ -13,8 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.todev.ma.order.OrderStatus.CONFIRMED;
-import static com.todev.ma.order.OrderStatus.PENDING;
+import static com.todev.ma.order.OrderStatus.*;
 import static com.todev.ma.order.PaymentMethod.PIX;
 
 @Service
@@ -70,9 +69,21 @@ class OrderService implements IOrderService {
         }
     }
 
+    @Transactional
     List<DisplayOrderResponseData> findAll(Authentication session) {
         User user = userService.getSessionOwner(session);
         List<Order> orders = orderRepository.findByUserId(user.getId());
+        LocalDateTime now = LocalDateTime.now();
+
+        for (Order order : orders) {
+            boolean shouldCancelOrder = order.getDueDate().isBefore(now) && order.getStatus().equals(PENDING);
+
+            if (shouldCancelOrder) {
+                order.setStatus(CANCELLED);
+
+                orderRepository.save(order);
+            }
+        }
 
         return orders.stream().map(order ->
                 new DisplayOrderResponseData(
