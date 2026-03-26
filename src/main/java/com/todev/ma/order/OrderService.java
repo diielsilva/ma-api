@@ -1,8 +1,8 @@
 package com.todev.ma.order;
 
-import com.todev.ma.order.pix.IPixDetailService;
 import com.todev.ma.order.payment.CreatePaymentOrderResponseData;
 import com.todev.ma.order.payment.IPaymentOrderService;
+import com.todev.ma.order.pix.IPixDetailService;
 import com.todev.ma.shared.ModelNotFoundException;
 import com.todev.ma.user.IUserService;
 import com.todev.ma.user.User;
@@ -76,6 +76,21 @@ class OrderService implements IOrderService {
                 order.getStatus(),
                 order.getCreatedAt()
         );
+    }
+
+    List<DisplayOrderResponseData> findAll(Authentication session) {
+        User user = userService.getSessionOwner(session);
+        List<Order> orders = orderRepository.findByUserId(user.getId());
+
+        return orders.stream().map(order ->
+                new DisplayOrderResponseData(
+                        order.getId(),
+                        order.getValue(),
+                        order.getDueDate(),
+                        order.getPaymentMethod(),
+                        order.getStatus(),
+                        order.getCreatedAt()
+                )).toList();
     }
 
     @Override
