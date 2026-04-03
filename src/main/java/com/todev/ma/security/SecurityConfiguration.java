@@ -12,6 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 import static org.springframework.http.HttpMethod.POST;
 
@@ -39,6 +42,7 @@ class SecurityConfiguration {
         TokenFilter tokenFilter = new TokenFilter(authenticationManager, userDetailsRepository, tokenService);
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(configurer -> configurer.configurationSource(request -> getAllowedCors()))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
@@ -51,4 +55,16 @@ class SecurityConfiguration {
                 .addFilterBefore(tokenFilter, BasicAuthenticationFilter.class)
                 .build();
     }
+
+    private CorsConfiguration getAllowedCors() {
+        CorsConfiguration cors = new CorsConfiguration();
+
+        cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
+        cors.setAllowCredentials(true);
+        cors.setAllowedHeaders(List.of("*"));
+        cors.setAllowedOriginPatterns(List.of("http://localhost:4200", "https://app.movimenta.site"));
+
+        return cors;
+    }
+
 }
