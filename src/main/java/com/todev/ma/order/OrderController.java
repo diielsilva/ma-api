@@ -19,7 +19,7 @@ class OrderController {
 
     @PostMapping
     @ResponseStatus(value = CREATED)
-    void create(Authentication session, CreateOrderRequestData data) {
+    void create(Authentication session, @RequestBody CreateOrderRequestData data) {
         orderService.create(session, data);
     }
 

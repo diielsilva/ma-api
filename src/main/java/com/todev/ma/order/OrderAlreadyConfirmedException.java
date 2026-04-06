@@ -1,6 +1,8 @@
 package com.todev.ma.order;
 
-class OrderAlreadyConfirmedException extends RuntimeException {
+import com.todev.ma.shared.BusinessRuleViolationException;
+
+class OrderAlreadyConfirmedException extends BusinessRuleViolationException {
     private static final String EXCEPTION_MESSAGE = "O usuário já está registrado no evento";
 
     OrderAlreadyConfirmedException() {

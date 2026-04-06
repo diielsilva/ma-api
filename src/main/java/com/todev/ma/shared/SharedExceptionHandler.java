@@ -38,4 +38,10 @@ class SharedExceptionHandler {
     ErrorResponseData handle(SecurityException exception) {
         return new ErrorResponseData(exception.getMessage(), Set.of());
     }
+
+    @ExceptionHandler(value = BusinessRuleViolationException.class)
+    @ResponseStatus(value = BAD_REQUEST)
+    ErrorResponseData handle(BusinessRuleViolationException exception) {
+        return new ErrorResponseData(exception.getMessage(), Set.of());
+    }
 }
