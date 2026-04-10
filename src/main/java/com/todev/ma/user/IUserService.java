@@ -9,5 +9,7 @@ import org.springframework.security.core.Authentication;
 public interface IUserService {
     User findByEmail(String email) throws ModelNotFoundException;
 
+    User findByCpf(String cpf) throws ModelNotFoundException;
+
     User getSessionOwner(Authentication session) throws ModelNotFoundException;
 }

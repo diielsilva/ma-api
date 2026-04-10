@@ -87,12 +87,17 @@ class UserService implements IUserService {
     }
 
     @Override
-    public User findByEmail(String email) throws ModelNotFoundException {
+    public User findByEmail(String email)  {
         return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
     }
 
     @Override
-    public User getSessionOwner(Authentication session) throws ModelNotFoundException {
+    public User findByCpf(String cpf)  {
+        return userRepository.findByCpf(cpf).orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    public User getSessionOwner(Authentication session)  {
         return findByEmail(session.getName());
     }
 
