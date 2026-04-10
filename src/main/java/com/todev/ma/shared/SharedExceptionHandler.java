@@ -44,4 +44,10 @@ class SharedExceptionHandler {
     ErrorResponseData handle(BusinessRuleViolationException exception) {
         return new ErrorResponseData(exception.getMessage(), Set.of());
     }
+
+    @ExceptionHandler(value = ModelNotFoundException.class)
+    @ResponseStatus(value = NOT_FOUND)
+    ErrorResponseData handle(ModelNotFoundException exception) {
+        return new ErrorResponseData(exception.getMessage(), Set.of());
+    }
 }
