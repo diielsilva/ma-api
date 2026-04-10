@@ -22,8 +22,7 @@ import static com.todev.ma.order.PaymentMethod.CASH;
 import static com.todev.ma.user.Gender.MALE;
 import static com.todev.ma.user.Role.USER;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.doNothing;
 import static org.mockito.BDDMockito.when;
 
@@ -203,6 +202,30 @@ class OrderServiceTest {
         when(orderRepository.findByUserId(any())).thenReturn(List.of(order));
 
         List<DisplayOrderResponseData> data = orderService.findAll(session);
+
+        assertFalse(data.isEmpty());
+    }
+
+    @Test
+    void findAllByUserCpf_MustReturnAnOrderList_WhenUserHasRegisteredOrders() {
+        User user = new User(
+                "Martin Ryan Pedro Aparício",
+                "martin-aparicio96@sp.senac.com.br",
+                "hQbzZZHANd",
+                "54463972906",
+                "27991911428",
+                MALE,
+                USER,
+                LocalDate.of(1972, 8, 2)
+        );
+
+        Order order = new Order(user, 25, LocalDateTime.now().minusDays(1), CASH, CONFIRMED);
+
+        when(userService.findByCpf(anyString())).thenReturn(user);
+
+        when(orderRepository.findByUserId(any())).thenReturn(List.of(order));
+
+        List<DisplayOrderResponseData> data = orderService.findAllByUserCpf("54463972906");
 
         assertFalse(data.isEmpty());
     }

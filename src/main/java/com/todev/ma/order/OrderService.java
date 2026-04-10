@@ -96,6 +96,34 @@ class OrderService implements IOrderService {
                 )).toList();
     }
 
+    @Transactional
+    List<DisplayOrderResponseData> findAllByUserCpf(String cpf) {
+        User user = userService.findByCpf(cpf);
+        List<Order> orders = orderRepository.findByUserId(user.getId());
+        LocalDateTime now = LocalDateTime.now();
+
+        for (Order order : orders) {
+            boolean shouldCancelOrder = order.getDueDate().isBefore(now) && order.getStatus().equals(PENDING);
+
+            if (shouldCancelOrder) {
+                order.setStatus(CANCELLED);
+
+                orderRepository.save(order);
+            }
+        }
+
+
+        return orders.stream().map(order ->
+                new DisplayOrderResponseData(
+                        order.getId(),
+                        order.getValue(),
+                        order.getDueDate(),
+                        order.getPaymentMethod(),
+                        order.getStatus(),
+                        order.getCreatedAt()
+                )).toList();
+    }
+
     @Override
     public Order findById(Long id) throws ModelNotFoundException {
         if (id == null || id <= 0) {

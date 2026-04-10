@@ -275,6 +275,56 @@ class UserServiceTest {
     }
 
     @Test
+    void findByEmail_MustReturnAnUser_WhenEmailWasFound() {
+        User user = new User(
+                "Martin Ryan Pedro Aparício",
+                "martin-aparicio96@sp.senac.com.br",
+                "hQbzZZHANd",
+                "54463972906",
+                "27991911428",
+                MALE,
+                USER,
+                LocalDate.of(1972, 8, 2)
+        );
+
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+
+        assertDoesNotThrow(() -> userService.findByEmail("martin-aparicio96@sp.senac.com.br"));
+    }
+
+    @Test
+    void findByEmail_MustNotReturnAnUser_WhenEmailWasNotFound() {
+        when(userRepository.findByEmail(anyString())).thenReturn(empty());
+
+        assertThrows(UserNotFoundException.class, () -> userService.findByEmail("martin-aparicio96@sp.senac.com.br"));
+    }
+
+    @Test
+    void findByCpf_MustReturnAnUser_WhenCpfWasFound() {
+        User user = new User(
+                "Martin Ryan Pedro Aparício",
+                "martin-aparicio96@sp.senac.com.br",
+                "hQbzZZHANd",
+                "54463972906",
+                "27991911428",
+                MALE,
+                USER,
+                LocalDate.of(1972, 8, 2)
+        );
+
+        when(userRepository.findByCpf(anyString())).thenReturn(Optional.of(user));
+
+        assertDoesNotThrow(() -> userService.findByCpf("54463972906"));
+    }
+
+    @Test
+    void findByCpf_MustNotReturnAnUser_WhenCpfWasNotFound() {
+        when(userRepository.findByCpf(anyString())).thenReturn(empty());
+
+        assertThrows(UserNotFoundException.class, () -> userService.findByCpf("54463972906"));
+    }
+
+    @Test
     void getSessionOwner_MustReturnAnUser_WhenSessionOwnerWasFound() {
         Authentication session = new UsernamePasswordAuthenticationToken("bento@queirozgalvao.com", null);
 

@@ -1,5 +1,6 @@
 package com.todev.ma.order;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,5 +28,12 @@ class OrderController {
     @ResponseStatus(value = OK)
     List<DisplayOrderResponseData> findAll(Authentication session) {
         return orderService.findAll(session);
+    }
+
+    @PreAuthorize(value = "hasAuthority('ADMIN')")
+    @GetMapping(value = "/search")
+    @ResponseStatus(value = OK)
+    List<DisplayOrderResponseData> findAllByUserCpf(@RequestParam String cpf) {
+        return orderService.findAllByUserCpf(cpf);
     }
 }
