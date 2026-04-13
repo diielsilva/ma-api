@@ -1,5 +1,6 @@
 package com.todev.ma.order;
 
+import com.todev.ma.order.pix.DisplayPixDetailResponseData;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -35,5 +36,11 @@ class OrderController {
     @ResponseStatus(value = OK)
     List<DisplayOrderResponseData> findAllByUserCpf(@RequestParam String cpf) {
         return orderService.findAllByUserCpf(cpf);
+    }
+
+    @GetMapping(value = "/{orderId}/details")
+    @ResponseStatus(value = OK)
+    DisplayPixDetailResponseData findDetailsByOrderId(Authentication session, @PathVariable Long orderId) {
+        return orderService.findPixDetailsByOrderId(session, orderId);
     }
 }

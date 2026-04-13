@@ -5,8 +5,6 @@ import com.todev.ma.order.payment.CreatePaymentOrderResponseData;
 import com.todev.ma.order.payment.PaymentCustomer;
 import com.todev.ma.order.payment.QrCodeDetailsResponseData;
 import com.todev.ma.order.payment.QrCodeResponseData;
-import com.todev.ma.order.pix.PixDetailRepository;
-import com.todev.ma.order.pix.PixDetailService;
 import com.todev.ma.user.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,12 +15,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.todev.ma.order.OrderStatus.PENDING;
 import static com.todev.ma.order.PaymentMethod.PIX;
 import static com.todev.ma.user.Gender.MALE;
 import static com.todev.ma.user.Role.USER;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.when;
 
 @ExtendWith(value = MockitoExtension.class)
 class PixDetailServiceTest {
@@ -59,5 +61,21 @@ class PixDetailServiceTest {
         );
 
         assertDoesNotThrow(() -> pixDetailService.create(order, data));
+    }
+
+    @Test
+    void findByOrderId_MustReturnAPixDetail_WhenOrderHasAPixDetail() {
+        PixDetail details = new PixDetail();
+
+        when(pixDetailRepository.findByOrderId(anyLong())).thenReturn(Optional.of(details));
+
+        assertDoesNotThrow(() -> pixDetailService.findByOrderId(1L));
+    }
+
+    @Test
+    void findByOrderId_MustNotReturnAPixDetail_WhenOrderDoesNotHaveAPixDetail() {
+        when(pixDetailRepository.findByOrderId(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(PixDetailNotFoundException.class, () -> pixDetailService.findByOrderId(1L));
     }
 }

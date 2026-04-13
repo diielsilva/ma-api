@@ -1,6 +1,7 @@
 package com.todev.ma.order;
 
 import com.todev.ma.order.payment.IPaymentOrderService;
+import com.todev.ma.order.pix.DisplayPixDetailResponseData;
 import com.todev.ma.order.pix.IPixDetailService;
 import com.todev.ma.user.IUserService;
 import com.todev.ma.user.User;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 import static com.todev.ma.order.OrderStatus.*;
 import static com.todev.ma.order.PaymentMethod.CASH;
+import static com.todev.ma.order.PaymentMethod.PIX;
 import static com.todev.ma.user.Gender.MALE;
 import static com.todev.ma.user.Role.USER;
 import static org.junit.jupiter.api.Assertions.*;
@@ -228,5 +230,156 @@ class OrderServiceTest {
         List<DisplayOrderResponseData> data = orderService.findAllByUserCpf("54463972906");
 
         assertFalse(data.isEmpty());
+    }
+
+    @Test
+    void findPixDetailsByOrderId_MustReturnAPixDetails_WhenNoExceptionIsThrown() {
+        User user = new User(
+                "Martin Ryan Pedro Aparício",
+                "martin-aparicio96@sp.senac.com.br",
+                "hQbzZZHANd",
+                "54463972906",
+                "27991911428",
+                MALE,
+                USER,
+                LocalDate.of(1972, 8, 2)
+        );
+
+        Authentication session = new UsernamePasswordAuthenticationToken(user.getEmail(), null, null);
+
+        Order order = new Order(user, 25, LocalDateTime.now().plusDays(1), PIX, PENDING);
+
+        DisplayPixDetailResponseData details = new DisplayPixDetailResponseData("", "");
+
+        user.setId(1L);
+
+        when(userService.getSessionOwner(any(Authentication.class))).thenReturn(user);
+
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
+
+        when(pixDetailService.findByOrderId(anyLong())).thenReturn(details);
+
+        assertDoesNotThrow(() -> orderService.findPixDetailsByOrderId(session, 1L));
+    }
+
+    @Test
+    void findPixDetailsByOrderId_MustNotReturnAPixDetail_WhenSelectedOrderDoesNotBelongToSessionOwner() {
+        User bento = new User(
+                "Bento João Alexandre Duarte",
+                "bento_duarte@queirozgalvao.com",
+                "mOXNClJCRD",
+                "18881451026",
+                "63988968264",
+                MALE,
+                USER,
+                LocalDate.of(2000, 3, 15),
+                null
+        );
+
+        User martin = new User(
+                "Martin Ryan Pedro Aparício",
+                "martin-aparicio96@sp.senac.com.br",
+                "hQbzZZHANd",
+                "54463972906",
+                "27991911428",
+                MALE,
+                USER,
+                LocalDate.of(1972, 8, 2)
+        );
+
+        Authentication session = new UsernamePasswordAuthenticationToken(bento.getEmail(), null, null);
+
+        Order order = new Order(martin, 25, LocalDateTime.now().plusDays(1), PIX, PENDING);
+
+        bento.setId(1L);
+
+        martin.setId(2L);
+
+        when(userService.getSessionOwner(any(Authentication.class))).thenReturn(bento);
+
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
+
+        assertThrows(UnauthorizedOrderAccessException.class, () -> orderService.findPixDetailsByOrderId(session, 1L));
+    }
+
+    @Test
+    void findPixDetailsByOrderId_MustNotReturnAPixDetail_WhenOrderPaymentMethodIsEqualsToCash() {
+        User bento = new User(
+                "Bento João Alexandre Duarte",
+                "bento_duarte@queirozgalvao.com",
+                "mOXNClJCRD",
+                "18881451026",
+                "63988968264",
+                MALE,
+                USER,
+                LocalDate.of(2000, 3, 15),
+                null
+        );
+
+        Authentication session = new UsernamePasswordAuthenticationToken(bento.getEmail(), null, null);
+
+        Order order = new Order(bento, 25, LocalDateTime.now().plusDays(1), CASH, PENDING);
+
+        bento.setId(1L);
+
+        when(userService.getSessionOwner(any(Authentication.class))).thenReturn(bento);
+
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
+
+        assertThrows(OrderDoesNotHavePixDetailException.class, () -> orderService.findPixDetailsByOrderId(session, 1L));
+    }
+
+    @Test
+    void findPixDetailsByOrderId_MustNotReturnAPixDetail_WhenOrderIsNotPending() {
+        User bento = new User(
+                "Bento João Alexandre Duarte",
+                "bento_duarte@queirozgalvao.com",
+                "mOXNClJCRD",
+                "18881451026",
+                "63988968264",
+                MALE,
+                USER,
+                LocalDate.of(2000, 3, 15),
+                null
+        );
+
+        Authentication session = new UsernamePasswordAuthenticationToken(bento.getEmail(), null, null);
+
+        Order order = new Order(bento, 25, LocalDateTime.now().plusDays(1), PIX, CANCELLED);
+
+        bento.setId(1L);
+
+        when(userService.getSessionOwner(any(Authentication.class))).thenReturn(bento);
+
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
+
+        assertThrows(NonPendingOrderAccessException.class, () -> orderService.findPixDetailsByOrderId(session, 1L));
+    }
+
+    @Test
+    void findPixDetailsByOrderId_MustNotReturnAPixDetail_WhenOrderIsExpired() {
+        User bento = new User(
+                "Bento João Alexandre Duarte",
+                "bento_duarte@queirozgalvao.com",
+                "mOXNClJCRD",
+                "18881451026",
+                "63988968264",
+                MALE,
+                USER,
+                LocalDate.of(2000, 3, 15),
+                null
+        );
+
+        Authentication session = new UsernamePasswordAuthenticationToken(bento.getEmail(), null, null);
+
+        Order order = new Order(bento, 25, LocalDateTime.now().minusDays(1), PIX, PENDING);
+
+        bento.setId(1L);
+
+        when(userService.getSessionOwner(any(Authentication.class))).thenReturn(bento);
+
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
+
+        assertThrows(ExpiredPixDetailException.class, () -> orderService.findPixDetailsByOrderId(session, 1L));
     }
 }

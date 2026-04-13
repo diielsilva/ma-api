@@ -3,10 +3,7 @@ package com.todev.ma.enrollment.confirmation;
 import com.todev.ma.enrollment.Enrollment;
 import com.todev.ma.shared.Model;
 import com.todev.ma.user.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "manual_confirmations")
@@ -14,6 +11,7 @@ public class ManualConfirmation extends Model {
     @OneToOne
     private Enrollment enrollment;
 
+    @JoinColumn(name = "confirmed_by")
     @ManyToOne
     private User confirmedBy;
 

@@ -2,6 +2,7 @@ package com.todev.ma.order;
 
 import com.todev.ma.order.payment.CreatePaymentOrderResponseData;
 import com.todev.ma.order.payment.IPaymentOrderService;
+import com.todev.ma.order.pix.DisplayPixDetailResponseData;
 import com.todev.ma.order.pix.IPixDetailService;
 import com.todev.ma.shared.ModelNotFoundException;
 import com.todev.ma.user.IUserService;
@@ -122,6 +123,37 @@ class OrderService implements IOrderService {
                         order.getStatus(),
                         order.getCreatedAt()
                 )).toList();
+    }
+
+    DisplayPixDetailResponseData findPixDetailsByOrderId(Authentication session, Long orderId) {
+        User user = userService.getSessionOwner(session);
+        Order order = findById(orderId);
+
+        boolean orderDoesNotBelongToSessionOwner = !user.getId().equals(order.getUser().getId());
+
+        if (orderDoesNotBelongToSessionOwner) {
+            throw new UnauthorizedOrderAccessException();
+        }
+
+        boolean isAManualOrder = !order.getPaymentMethod().equals(PIX);
+
+        if (isAManualOrder) {
+            throw new OrderDoesNotHavePixDetailException();
+        }
+
+        boolean isANonPendingOrder = !order.getStatus().equals(PENDING);
+
+        if (isANonPendingOrder) {
+            throw new NonPendingOrderAccessException();
+        }
+
+        boolean isAnExpiredOrder = order.getDueDate().isBefore(LocalDateTime.now());
+
+        if (isAnExpiredOrder) {
+            throw new ExpiredPixDetailException();
+        }
+
+        return pixDetailService.findByOrderId(orderId);
     }
 
     @Override
