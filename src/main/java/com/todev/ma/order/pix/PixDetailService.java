@@ -20,4 +20,11 @@ class PixDetailService implements IPixDetailService {
 
         pixDetailRepository.save(details);
     }
+
+    @Override
+    public DisplayPixDetailResponseData findByOrderId(Long orderId) {
+        PixDetail details = pixDetailRepository.findByOrderId(orderId).orElseThrow(PixDetailNotFoundException::new);
+
+        return new DisplayPixDetailResponseData(details.getCopyAndPasteCode(), details.getQrCodeUrl());
+    }
 }
