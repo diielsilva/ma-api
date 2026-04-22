@@ -44,7 +44,7 @@ class PaymentOrderService extends Trackable implements IPaymentOrderService {
         List<QrCodeRequestData> qrCodes = List.of(qrCode);
 
         CreatePaymentOrderRequestData data = new CreatePaymentOrderRequestData(
-                order.getId(), customer, qrCodes, List.of(paymentGatewayConfiguration.getUrl())
+                order.getId(), customer, qrCodes, List.of(paymentGatewayConfiguration.getWebhook())
         );
 
         return apiClient

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
 
 @Configuration
-class PaymentGatewayConfiguration {
+public class PaymentGatewayConfiguration {
     @Value(value = "${payment.gateway.url}")
     private String url;
 
@@ -25,7 +25,7 @@ class PaymentGatewayConfiguration {
         return url;
     }
 
-    String getToken() {
+    public String getToken() {
         return token;
     }
 
