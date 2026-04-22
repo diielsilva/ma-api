@@ -11,9 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+import static com.todev.ma.enrollment.EnrollmentType.AUTOMATED;
 import static com.todev.ma.enrollment.EnrollmentType.MANUAL;
 import static com.todev.ma.order.OrderStatus.PENDING;
 import static com.todev.ma.order.PaymentMethod.CASH;
+import static com.todev.ma.order.PaymentMethod.PIX;
 
 @Service
 class EnrollmentService {
@@ -32,6 +34,51 @@ class EnrollmentService {
         this.userService = userService;
         this.orderService = orderService;
         this.confirmationService = confirmationService;
+    }
+
+    //TODO Verify if it was sent by PagBank
+    @Transactional
+    void create(CreateEnrollmentRequestData request) {
+        Long orderId = request.reference_id();
+        Order order = orderService.findById(orderId);
+        LocalDateTime now = LocalDateTime.now();
+
+        if (request.charges().isEmpty()) {
+            throw new MissingChargeDetailException();
+        }
+
+        EnrollmentChargeDetail charge = request.charges().getFirst();
+        EnrollmentChargeAmount paidAmount = charge.amount();
+
+        if (!charge.status().equals("PAID")) {
+            throw new ChargeNotPaidException();
+        }
+
+        if (paidAmount.value() < order.getValue()) {
+            throw new InsufficientPaidAmountException();
+        }
+
+        if (!paidAmount.currency().equals("BRL")) {
+            throw new InvalidCurrencyException();
+        }
+
+        if (order.getStatus() != PENDING) {
+            throw new InvalidOrderStatusException();
+        }
+
+        if (order.getDueDate().isBefore(now)) {
+            throw new OrderExpiredException();
+        }
+
+        if (!order.getPaymentMethod().equals(PIX)) {
+            throw new ManuallyConfirmingAutomatedEnrollmentException();
+        }
+
+        Enrollment enrollment = new Enrollment(order, AUTOMATED);
+
+        enrollmentRepository.save(enrollment);
+
+        orderService.confirm(order);
     }
 
     @Transactional

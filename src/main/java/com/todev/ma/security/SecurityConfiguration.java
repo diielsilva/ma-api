@@ -1,5 +1,6 @@
 package com.todev.ma.security;
 
+import com.todev.ma.order.payment.PaymentGatewayConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,9 +38,11 @@ class SecurityConfiguration {
             HttpSecurity http,
             AuthenticationManager authenticationManager,
             UserDetailsRepository userDetailsRepository,
-            TokenService tokenService
+            TokenService tokenService,
+            PaymentGatewayConfiguration paymentGatewayConfiguration
     ) {
         TokenFilter tokenFilter = new TokenFilter(authenticationManager, userDetailsRepository, tokenService);
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(configurer -> configurer.configurationSource(request -> getAllowedCors()))
@@ -50,6 +53,7 @@ class SecurityConfiguration {
                         requestAuthorizer
                                 .requestMatchers(POST, "/users").permitAll()
                                 .requestMatchers(POST, "/login").permitAll()
+                                .requestMatchers(POST, "/enrollments").permitAll()
                                 .anyRequest()
                                 .authenticated())
                 .addFilterBefore(tokenFilter, BasicAuthenticationFilter.class)
