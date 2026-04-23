@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 import static com.todev.ma.enrollment.EnrollmentType.AUTOMATED;
 import static com.todev.ma.enrollment.EnrollmentType.MANUAL;
@@ -106,5 +108,31 @@ class EnrollmentService {
         orderService.confirm(order);
 
         confirmationService.create(admin, enrollment);
+    }
+
+    @Transactional
+    List<DisplayEnrollmentResponseData> findAllBySessionOwner(Authentication session) {
+        String email = session.getName();
+        User user = userService.findByEmail(email);
+
+        Optional<Enrollment> retrievedEnrollment = enrollmentRepository.findByOrderUserId(user.getId());
+
+        if (retrievedEnrollment.isEmpty()) {
+            return List.of();
+        }
+
+        Enrollment enrollment = retrievedEnrollment.get();
+
+        DisplayEnrollmentResponseData data = new DisplayEnrollmentResponseData(
+                enrollment.getId(),
+                user.getName(),
+                user.getCpf(),
+                user.getPhone(),
+                enrollment.getOrder().getValue(),
+                enrollment.getType(),
+                enrollment.getCreatedAt()
+        );
+
+        return List.of(data);
     }
 }
