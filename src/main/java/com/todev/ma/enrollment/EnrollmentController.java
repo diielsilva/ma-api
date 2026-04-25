@@ -1,5 +1,7 @@
 package com.todev.ma.enrollment;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -35,5 +37,12 @@ class EnrollmentController {
     @ResponseStatus(value = OK)
     List<DisplayEnrollmentResponseData> findAllBySessionOwner(Authentication session) {
         return enrollmentService.findAllBySessionOwner(session);
+    }
+
+    @PreAuthorize(value = "hasAuthority('ADMIN')")
+    @GetMapping(value = "/all")
+    @ResponseStatus(value = OK)
+    Page<DisplayEnrollmentResponseData> findAll(Pageable page) {
+        return enrollmentService.findAll(page);
     }
 }
