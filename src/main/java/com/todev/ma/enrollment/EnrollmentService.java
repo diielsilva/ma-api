@@ -5,6 +5,8 @@ import com.todev.ma.order.IOrderService;
 import com.todev.ma.order.Order;
 import com.todev.ma.user.IUserService;
 import com.todev.ma.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -134,5 +136,25 @@ class EnrollmentService {
         );
 
         return List.of(data);
+    }
+
+    @Transactional
+    Page<DisplayEnrollmentResponseData> findAll(Pageable page) {
+        Page<Enrollment> enrollments = enrollmentRepository.findAll(page);
+
+        return enrollments.map(enrollment -> {
+            Order order = enrollment.getOrder();
+            User user = order.getUser();
+
+            return new DisplayEnrollmentResponseData(
+                    enrollment.getId(),
+                    user.getName(),
+                    user.getCpf(),
+                    user.getPhone(),
+                    order.getValue(),
+                    enrollment.getType(),
+                    enrollment.getCreatedAt()
+            );
+        });
     }
 }
